@@ -1,10 +1,10 @@
 ---
 title: test
-published: 2024-04-01
+published: 2026-05-18
 description: "test"
 image: "./cover.webp"
-tags: ["Mizuki", "Blogging", "Customization"]
-category: Guides
+tags: ["test"]
+category: Test
 draft: false
 ---
 
