@@ -1,4 +1,4 @@
-# 武汉科技大学RoBomaster崇实战队算法组WUST_RM博客
+# 武汉科技大学RoboMaster崇实战队算法组WUST_RM博客
 
 ## 博客发布说明
 
