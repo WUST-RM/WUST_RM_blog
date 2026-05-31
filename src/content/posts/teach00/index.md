@@ -47,7 +47,7 @@ draft: false
 加入我们这个战队，免不了需要进行交流学习，无论线上线下，本人希望各位小登要学会如何正确的提问（本人也在各类群里看过不少笑话）
 建议学习一下经典文档提问的艺术，https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way
 
-[![pmFPVhR.jpg](https://s41.ax1x.com/2026/05/28/pmFPVhR.jpg)](https://imgchr.com/i/pmFPVhR)（这也是视觉救命群梗图）
+[![pmAAbYF.jpg](https://s41.ax1x.com/2026/05/31/pmAAbYF.jpg)](https://imgchr.com/i/pmAAbYF)（这也是视觉救命群梗图）
 
 [![pmFPm1x.jpg](https://s41.ax1x.com/2026/05/28/pmFPm1x.jpg)](https://imgchr.com/i/pmFPm1x)
 
