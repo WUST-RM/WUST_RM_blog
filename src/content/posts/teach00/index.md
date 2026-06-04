@@ -6,6 +6,7 @@ image: ""
 tags: ["teach"]
 category: teach
 draft: false
+author: qing_feng
 ---
 
 # lesson0 **算法组的工作及后续学习路线及学会正确提问**
