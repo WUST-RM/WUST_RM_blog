@@ -46,13 +46,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 ### **工具链的部署问题**
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=MWYyZjU2NmY5YzU1ZDNiZTcwMWQ3MmViYzMwODBiYjRfMDM2ZGE5NDIxOGNkNzEzMzJiODk4MDVkNjhiYWJjZmZfSUQ6NzY0NTk3OTgwNjI2OTQ1OTQyNV8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image1.png)
 
 sudo apt install cmake
 
 使用以上命令可以较为简单的在Linux上下载好CMAKE（链接器）
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=MmYyZWU4MzQyNTEwNDRlMzlkNmZiNDE0N2UxMzcyYTdfY2EyOWUwZDI0OGQ0NzhlMjY5YmJkYmQyYmI2ODM1YjRfSUQ6NzY0NTk3OTgwNDkxNDg0NjkwMF8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image2.png)
 
 sudo apt install clang
 
@@ -62,7 +62,7 @@ C\+\+工具链的安装以及“虚假报错”解决论述  在者便是有关I
 
 当然并非是终端不能够进行VScode的下载，而是通过Snap库下载的VScode会出现各种链接问题（qf注：snap是一坨，建议刚安装好ubuntu就删掉snap），以至于会在开发或学习的过程中出现各种各样的编译问题，对此我深受其害。
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=MTViNzljZmRhZTE0YmIyZGE2NWUxMzEyMTI1ZDJiNzdfMDA0OGY4ZTZmNjYwMzUzM2FhZjlhZTBhZjZkYmVlMDhfSUQ6NzY0NTk3OTgwNjQ4NzY0NTE1Nl8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image3.png)
 
 需牢记linux与WIn不同的是\.deb后缀的包,下载完成后在Downloads的目录下打开终端执行类似图上的命令\./后面是你的点电脑上下载安装包的名字
 
@@ -72,12 +72,12 @@ C\+\+工具链的安装以及“虚假报错”解决论述  在者便是有关I
 
 对于vscode的插件，推荐安装cmake和clangd，对于大型工程项目管理极其友好
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=M2E5MTQ4ZDE5ZDQ2ZWMxZTQwYmZkOTk4OGRkOWMzMzBfZDA5ODJlYjJjMzJhMWJjZGU5NGIwZTU1ZDJjZDFiNGFfSUQ6NzY0NTk3OTgwNTk1MDcyNTA1MV8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image4.png)
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=OTQ1MTQ3Y2ZkYjQyNjQ3NDU5ZDlkNjQwZmE5MmFkZTRfZTZjY2UxZGNkNzU4MmM0MDJiOTViYzgwZDIwNzc2MDlfSUQ6NzY0NTk3OTgwNjQxMjA4MjM2NF8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image5.png)
 
 对于微软官方的cpp包插件，建议直接禁用，避免与clangd冲突（并且clangd更好使）
 
-![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=ZWNlNWIxMjhhOTQyOTAzY2UzNmFjZmJmZDA3NDkxYTZfN2U5ZTRhZjFkZjFkNjA3MDJmNjBjMjJiODBmNjAwZDlfSUQ6NzY0NTk3OTgwMzYzMTQ3MTU0Nl8xNzgwNTgwNzg2OjE3ODA2NjcxODZfVjM)
+![Image](src/content/posts/teach02/images/image6.png)
 
 --由qing_feng编写
