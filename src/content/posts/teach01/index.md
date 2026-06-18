@@ -1,6 +1,6 @@
 ---
 title: lesson1 ubuntu系统的基本介绍及linux指令简介
-published: 2026-05-31
+published: 2026-06-01
 description: "教学文档lesson1"
 image: ""
 tags: ["teach"]
