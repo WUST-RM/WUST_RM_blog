@@ -117,16 +117,16 @@ std::condition_variable条件变量需要结合std::mutex使用，本质就是�
 
 最后贴出写这次文档的参考资料，感兴趣的同学可以观看深入了解：
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=417284346&bvid=BV17V411e7Ua&cid=316175742&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=417284346&bvid=BV17V411e7Ua&cid=316175742&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=717872269&bvid=BV1oQ4y1C73G&cid=402142356&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=717872269&bvid=BV1oQ4y1C73G&cid=402142356&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113685502628251&bvid=BV18hk2Y4EAm&cid=27442155017&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=113685502628251&bvid=BV18hk2Y4EAm&cid=27442155017&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113779169826043&bvid=BV1sDrGYQEKP&cid=29356132597&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=113779169826043&bvid=BV1sDrGYQEKP&cid=29356132597&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113797322773349&bvid=BV1RkrrYSEDY&cid=27790018244&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=113797322773349&bvid=BV1RkrrYSEDY&cid=27790018244&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=1255441103&bvid=BV1VJ4m1g7Nh&cid=1573431472&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+<iframe width="100%" height="468" src="//player.bilibili.com/player.html?isOutside=true&aid=1255441103&bvid=BV1VJ4m1g7Nh&cid=1573431472&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" autoplay=0></iframe>
 
 --由qing_feng编写
