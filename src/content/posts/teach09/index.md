@@ -1,6 +1,6 @@
 ---
 title: lesson9 机器人基础之硬件篇
-published: 2026-07-15
+published: 2026-07-21
 description: "教学文档lesson9"
 image: ""
 tags: ["teach"]
