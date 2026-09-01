@@ -104,7 +104,7 @@ author: qing_feng
 
 注意，以上坐标系的指向并不统一，主要由开发者自己定义（每个不同的软件引擎都有自己的坐标系，我是真的力竭了😡，推荐以ROS系为标准）
 
-![Image](src/content/posts/teach11/images/image16.png)
+![Image](src/content/posts/teach11/images/image16.jpg)
 
 ![Image](src/content/posts/teach11/images/image17.png)
 
@@ -126,7 +126,7 @@ author: qing_feng
 
 对于相机的标定，目前主流有张正友标定法、Kalibr等，标定板也有棋盘格、AprilTag等。
 
-![Image](src/content/posts/teach11/images/image19.png)
+![Image](src/content/posts/teach11/images/image19.jpg)
 我目前手上的棋盘格标定板
 
 1. 张正友标定法：
