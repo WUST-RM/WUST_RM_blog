@@ -6,15 +6,14 @@
 
 ## 效果
 
-- 页面左下角显示 Live2D 角色，可拖拽移动（默认桌面 / 移动端都显示，见下方隐藏开关）。
+- 桌面端（视口宽度 > 1024px）左下角显示 Live2D 角色，可拖拽移动；移动端隐藏。
 - 角色会循环播放 IDLE 待机动作；点击角色会播放随机身体动作（举手 / 摆尾 / 竖手指等）并随机切换表情。
 - 鼠标悬停显示 Pio 的操作按钮：切换显示比例（全身 / 半身）、回到首页、关于（跳转仓库）、关闭看板娘。
 - 首次加载时先显示角色缩略图占位，模型就绪后淡出。
-- 移动端隐藏开关：`pioConfig.hiddenOnMobile` 当前为 `false`（移动端也显示）。若设为 `true`，
+- 移动端 / 小屏 / 省流量模式（`navigator.connection.saveData`）下不加载模型，避免浪费流量：
   `Layout.astro` 会在 `<head>` 注入 `@media (max-width: <mobileBreakpoint>px)` 样式直接隐藏看板娘（SSR 即生效），
-  `Pio.svelte` 也会跳过脚本加载、不下载约 19 MB 模型。开启省流量模式（`navigator.connection.saveData`）时同样不加载。
-- 移动端（≤768px）沿用 Pio 原插件的样式：看板娘仅作装饰展示（`.pio-container { pointer-events: none }`），
-  不响应点击 / 拖拽，避免遮挡页面触控操作；如需移动端可交互，可在 `pio.css` 中覆盖该规则。
+  `Pio.svelte` 在 `onMount` 时也会跳过脚本加载、不下载约 19 MB 模型。
+  （若确实需要在移动端显示：`hiddenOnMobile: false`；注意 Pio 原插件在 ≤768px 下 `pointer-events: none`，仅作展示。）
 - 模型加载失败时，占位层会显示错误面板（含具体错误信息），并隐藏 canvas，避免 WebGL 上下文异常时出现空白色块。
 
 ## 目录与文件
@@ -90,7 +89,7 @@ export const pioConfig: PioConfig = {
 	width: 300,                // 画布 CSS 宽度（px）
 	height: 420,               // 画布 CSS 高度（px）
 	mode: "draggable",         // "static" | "fixed" | "draggable"
-	hiddenOnMobile: false,     // 移动端也显示；设为 true 则移动端隐藏且不下载模型
+	hiddenOnMobile: true,      // 移动端 / 小屏隐藏（不加载模型，节省流量）
 	live2d: {
 		scale: 1.12,           // 缩放倍数（1 = 自动“完整适配”）
 		offsetX: 0,            // 水平偏移（canvas 像素，正值向右）
@@ -98,7 +97,7 @@ export const pioConfig: PioConfig = {
 		idleGroupName: "Idle", // 待机动作组
 		idleIntervalMs: 6000,  // 待机动作兜底间隔（ms）
 		expressions: true,     // 点击时随机切换表情
-		mobileBreakpoint: 1024,// hiddenOnMobile 为 true 时，视口 ≤ 该值即隐藏（不下载模型）
+		mobileBreakpoint: 1024,// 视口宽度 ≤ 该值时隐藏（同时不下载模型）
 		preview: "/live2d/models/taifish/preview.webp", // 加载占位图（可选）
 		toggleView: true,      // 是否显示「全身 / 半身」切换按钮
 		defaultView: "full",   // 默认比例："full" 全身 | "bust" 半身特写
@@ -118,7 +117,7 @@ export const pioConfig: PioConfig = {
 - **模型太小/太大**：优先改 `width` / `height`（画布越大角色越大），或设置 `live2d.scale`（如 `1.15`）微调。
 - **角色被裁切**：用 `live2d.offsetY` 上下平移（正值向下），`offsetX` 左右平移。
 - **想静音点击反应**：把 `live2d.expressions` 设为 `false`（仍会播放身体动作）。
-- **移动端想省流量**：把 `hiddenOnMobile` 设为 `true`，此时 ≤ `mobileBreakpoint` 宽度不下载约 19 MB 模型。
+- **移动端想显示**：把 `hiddenOnMobile` 设为 `false`，此时移动端也会下载约 19 MB 模型（Pio 原插件在 ≤768px 下为仅展示）。
 - 修改 `width` / `height` 后，`Pio.svelte` 中的 canvas 内联尺寸会同步更新，无需改 CSS。
 
 ### 画面调整（300×420 画布实测）
@@ -192,7 +191,7 @@ Cubism 2 的 `model.json` / `.moc` 模型**不能**用这套运行时加载。
 
 - 首次加载体积：`moc3` ≈ 16.5 MB（Vercel/CDN 会 gzip/br 压缩，实际传输明显更小）+ 贴图 1.54 MB + 动作/表情/物理约 0.4 MB；
   之后由浏览器 HTTP 缓存，二次访问几乎无网络开销。
-- 贴图在 GPU 中解码为约 64 MB 显存（2048 上限的 RGBA）；移动端默认也会加载，若在意流量可设 `hiddenOnMobile: true`。
+- 贴图在 GPU 中解码为约 64 MB 显存（2048 上限的 RGBA）；移动端默认不加载（`hiddenOnMobile: true`），设为 `false` 时移动端也会加载。
 - 加载时机：`<Pio client:visible />`（进入视口才水合）+ `requestIdleCallback` + 视口宽度/省流量判断，
   不会阻塞首页渲染；脚本按 core → l2d → pio 顺序串行加载。
 - Cubism Core 为官方 5.x 版本，支持 moc3 v5（本模型文件版本 5）。
@@ -233,9 +232,9 @@ node live2d-work/bundle/verify/verify-live2d.mjs --url http://127.0.0.1:4321/ --
 | `Failed to load model` / moc3 解析失败 | 确认 `taifish.moc3` 完整（16,498,560 B，sha256 `b708e795…b1052e6`），且未被 git 换行/过滤破坏 |
 | 角色显示为空白或只有一半 | 调整 `width`/`height` 或 `live2d.scale` / `offsetY`；模型原始画布为 3749×7697（竖长比例） |
 | 鼻子上出现黑色小方块 | 作者原模型 `texture_00` 图集带一条会被鼻子采样的黑色长条，本仓库转换时已置透明（详见「资源转换流程」第 3 步）；若换回作者原贴图会复现 |
-| 移动端看不到 / 移动端想隐藏 | `pioConfig.hiddenOnMobile` 当前为 `false`，移动端会显示；设为 `true` 则 ≤ `mobileBreakpoint` 宽度隐藏且不下载模型 |
+| 移动端看不到 | 属预期行为（`hiddenOnMobile: true` + `mobileBreakpoint: 1024` 隐藏且不下载模型）；需要时改 `hiddenOnMobile: false`（移动端会下载约 19 MB） |
 | 关闭后想恢复看板娘 | 点击左下角半透明小头像（`.pio-show`），或清除 localStorage 中的 `posterGirl` 后刷新 |
 | 恢复后显示「看板娘加载失败」 | 打开控制台看 `[l2d] load failed:` 的具体错误；若为 `checkMaxIfStatementsInShader`，说明 `l2d.js` 版本过旧（没有按 canvas 复用渲染器），请更新 `l2d.js`。本仓库当前版本已修复 |
 | 点击没有反应 | 确认 `pioConfig.mode` 不是 `"static"`；`static` 模式只显示模型、无交互 |
 | 想切换成半身特写 | 鼠标悬停角色，点按钮栏最上方的「放大 / 缩小」图标；参数与自定义见「显示比例切换（全身 / 半身）」 |
-| 切换按钮不出现 | 确认 `live2d.toggleView` 不为 `false`；按钮只在鼠标悬停看板娘时显示（移动端悬停请先轻点角色） |
+| 切换按钮不出现 | 确认 `live2d.toggleView` 不为 `false`；按钮只在鼠标悬停看板娘时显示（移动端默认隐藏看板娘） |

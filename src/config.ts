@@ -590,7 +590,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 	width: 300, // 画布宽度（px）
 	height: 420, // 画布高度（px）
 	mode: "draggable", // 默认为可拖拽模式
-	hiddenOnMobile: false, // 默认移动端也显示；设为 true 则移动端不加载模型（省流量）
+	hiddenOnMobile: true, // 移动端 / 小屏隐藏看板娘（不加载模型，节省流量）
 	live2d: {
 		// 模型缩放 / 偏移由 l2d.js 读取；数值基于 300x420 画布实测
 		scale: 1.12, // 全身完整显示（推荐）；改为 2.0 + offsetY 339 可切换为膝盖以上特写
