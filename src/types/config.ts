@@ -471,6 +471,16 @@ export interface PioConfig {
 	height?: number; // 看板娘高度
 	mode?: "static" | "fixed" | "draggable"; // 展现模式
 	hiddenOnMobile?: boolean; // 是否在移动设备上隐藏
+	live2d?: {
+		scale?: number; // 模型缩放倍数（不填则自动适配）
+		offsetX?: number; // 水平偏移（相对 canvas 宽度，-1 ~ 1）
+		offsetY?: number; // 垂直偏移（相对 canvas 高度，-1 ~ 1）
+		idleGroupName?: string; // 待机动作组名称，默认 "Idle"
+		idleIntervalMs?: number; // 待机动作循环间隔（毫秒）
+		expressions?: boolean; // 点击模型时是否播放随机表情
+		preview?: string; // 加载占位图路径
+		mobileBreakpoint?: number; // 小于该视口宽度时隐藏看板娘
+	};
 	dialog?: {
 		welcome?: string | string[]; // 欢迎词
 		touch?: string | string[]; // 触摸提示

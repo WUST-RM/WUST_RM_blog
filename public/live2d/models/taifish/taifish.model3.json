@@ -1,0 +1,174 @@
+{
+  "Version": 3,
+  "FileReferences": {
+    "Moc": "taifish.moc3",
+    "Textures": [
+      "textures/texture_00.webp",
+      "textures/texture_01.webp",
+      "textures/texture_02.webp",
+      "textures/texture_03.webp",
+      "textures/texture_04.webp"
+    ],
+    "Physics": "taifish.physics3.json",
+    "DisplayInfo": "taifish.cdi3.json",
+    "Motions": {
+      "Idle": [
+        {
+          "File": "motions/idle.motion3.json",
+          "FadeInTime": 0.5
+        }
+      ],
+      "TapBody": [
+        {
+          "File": "motions/hand_raise_to_default.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        },
+        {
+          "File": "motions/hand_default_to_raise.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        }
+      ],
+      "FlickHead": [
+        {
+          "File": "motions/big_reaction.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        }
+      ],
+      "Extra": [
+        {
+          "File": "motions/foxtail_in.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        },
+        {
+          "File": "motions/foxtail_out.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        },
+        {
+          "File": "motions/finger_up_in.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        },
+        {
+          "File": "motions/finger_up_out.motion3.json",
+          "FadeInTime": 0.5,
+          "FadeOutTime": 0.5
+        }
+      ]
+    },
+    "Expressions": [
+      {
+        "Name": "heart_eyes",
+        "File": "expressions/heart_eyes.exp3.json"
+      },
+      {
+        "Name": "monocle",
+        "File": "expressions/monocle.exp3.json"
+      },
+      {
+        "Name": "steel_bowl",
+        "File": "expressions/steel_bowl.exp3.json"
+      },
+      {
+        "Name": "black_glasses",
+        "File": "expressions/black_glasses.exp3.json"
+      },
+      {
+        "Name": "dark_face",
+        "File": "expressions/dark_face.exp3.json"
+      },
+      {
+        "Name": "loading",
+        "File": "expressions/loading.exp3.json"
+      },
+      {
+        "Name": "blush",
+        "File": "expressions/blush.exp3.json"
+      },
+      {
+        "Name": "tears",
+        "File": "expressions/tears.exp3.json"
+      },
+      {
+        "Name": "cold_sweat",
+        "File": "expressions/cold_sweat.exp3.json"
+      },
+      {
+        "Name": "default_body",
+        "File": "expressions/default_body.exp3.json"
+      },
+      {
+        "Name": "lean_forward",
+        "File": "expressions/lean_forward.exp3.json"
+      },
+      {
+        "Name": "spiral_eyes",
+        "File": "expressions/spiral_eyes.exp3.json"
+      },
+      {
+        "Name": "skirt_toggle",
+        "File": "expressions/skirt_toggle.exp3.json"
+      },
+      {
+        "Name": "finger_down",
+        "File": "expressions/finger_down.exp3.json"
+      },
+      {
+        "Name": "finger_up",
+        "File": "expressions/finger_up.exp3.json"
+      },
+      {
+        "Name": "body_type_1",
+        "File": "expressions/body_type_1.exp3.json"
+      },
+      {
+        "Name": "body_type_2",
+        "File": "expressions/body_type_2.exp3.json"
+      },
+      {
+        "Name": "bunny_teeth",
+        "File": "expressions/bunny_teeth.exp3.json"
+      },
+      {
+        "Name": "shoes_off",
+        "File": "expressions/shoes_off.exp3.json"
+      },
+      {
+        "Name": "tail_toggle",
+        "File": "expressions/tail_toggle.exp3.json"
+      },
+      {
+        "Name": "smug_eyes",
+        "File": "expressions/smug_eyes.exp3.json"
+      },
+      {
+        "Name": "chest_clothes",
+        "File": "expressions/chest_clothes.exp3.json"
+      },
+      {
+        "Name": "squeeze_eyes",
+        "File": "expressions/squeeze_eyes.exp3.json"
+      }
+    ]
+  },
+  "Groups": [
+    {
+      "Target": "Parameter",
+      "Name": "EyeBlink",
+      "Ids": [
+        "ParamEyeROpen",
+        "ParamEyeLOpen"
+      ]
+    },
+    {
+      "Target": "Parameter",
+      "Name": "LipSync",
+      "Ids": []
+    }
+  ],
+  "HitAreas": []
+}

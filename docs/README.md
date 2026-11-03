@@ -18,6 +18,15 @@
 - **[../README.ja.md](../README.ja.md)** - 日本語  
 - **[../README.tw.md](../README.tw.md)** - 繁體中文
 
+### 功能扩展
+
+- **[LIVE2D.md](./LIVE2D.md)** - Live2D 看板娘集成（DeepSeek-chan 大肥鱼）⭐
+  - 渲染原理与加载顺序
+  - 配置项（位置 / 尺寸 / 缩放 / 待机动作 / 移动端）
+  - 模型版权与署名要求（使用前必读）
+  - 模型资源转换流程与性能说明
+  - 本地验证与常见问题
+
 ### 内容分离相关
 
 - **[CONTENT_SEPARATION.md](./CONTENT_SEPARATION.md)** - 内容分离完整指南 ⭐

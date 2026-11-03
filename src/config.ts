@@ -413,8 +413,9 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 };
 
 export const footerConfig: FooterConfig = {
-	enable: false, // 是否启用Footer HTML注入功能
-	customHtml: "", // HTML格式的自定义页脚信息，例如备案号等，默认留空
+	enable: true, // 是否启用Footer HTML注入功能
+	customHtml:
+		'<span class="footer-live2d-credit">Live2D 看板娘：<strong>DeepSeek-chan（大肥鱼）</strong> · 原画及拆分：神宫凉子 · Live2D 建模：霓虹猫_NeonNeko · <a href="/live2d/models/taifish/LICENSE.txt" target="_blank" rel="noopener noreferrer">使用须知</a></span>', // HTML格式的自定义页脚信息，例如备案号等，默认留空
 	// 也可以直接编辑 FooterConfig.html 文件来添加备案号等自定义内容
 	// 注意：若 customHtml 不为空，则使用 customHtml 中的内容；若 customHtml 留空，则使用 FooterConfig.html 文件中的内容
 	// FooterConfig.html 可能会在未来的某个版本弃用
@@ -583,25 +584,39 @@ export const sakuraConfig: SakuraConfig = {
 
 // Pio 看板娘配置
 export const pioConfig: import("./types/config").PioConfig = {
-	enable: false, // 禁用看板娘以提升性能
-	models: ["/pio/models/pio/model.json"], // 默认模型路径
+	enable: true, // 启用看板娘（Live2D 模型：DeepSeek-chan 大肥鱼）
+	models: ["/live2d/models/taifish/taifish.model3.json"], // Cubism 3/4 模型路径
 	position: "left", // 模型位置
-	width: 280, // 默认宽度
-	height: 250, // 默认高度
+	width: 300, // 画布宽度（px）
+	height: 420, // 画布高度（px）
 	mode: "draggable", // 默认为可拖拽模式
-	hiddenOnMobile: true, // 默认在移动设备上隐藏
+	hiddenOnMobile: true, // 默认在移动设备上隐藏（模型约 16MB，避免浪费流量）
+	live2d: {
+		// 模型缩放 / 偏移由 l2d.js 读取；数值基于 300x420 画布实测
+		scale: 1.12, // 全身完整显示（推荐）；改为 2.0 + offsetY 339 可切换为膝盖以上特写
+		offsetX: 0,
+		offsetY: 17,
+		idleGroupName: "Idle", // 待机动作组
+		idleIntervalMs: 6000, // 待机动作看门狗间隔（毫秒）
+		expressions: true, // 点击时随机切换一次表情
+		mobileBreakpoint: 1024, // 视口宽度 ≤1024px 时隐藏
+		preview: "/live2d/models/taifish/preview.webp", // 加载占位图
+	},
 	dialog: {
-		welcome: "Welcome to Mizuki Website!", // 欢迎词
+		welcome: [
+			"你好呀，我是 DeepSeek 大肥鱼～",
+			"欢迎来到 WUST-RM 的博客！",
+		], // 欢迎词
 		touch: [
-			"What are you doing?",
-			"Stop touching me!",
-			"HENTAI!",
-			"Don't bully me like that!",
+			"嘿嘿，别戳啦～",
+			"再戳就要生气了！",
+			"有什么想了解的，可以看看博客文章哦～",
+			"摸鱼中……",
 		], // 触摸提示
-		home: "Click here to go back to homepage!", // 首页提示
-		skin: ["Want to see my new outfit?", "The new outfit looks great~"], // 换装提示
-		close: "QWQ See you next time~", // 关闭提示
-		link: "https://github.com/LyraVoid/Mizuki", // 关于链接
+		home: "点击这里回到首页～", // 首页提示
+		skin: ["想看看我的新衣服吗？", "新衣服好看吗～"], // 换装提示
+		close: "QWQ 下次见～", // 关闭提示
+		link: "https://github.com/WUST-RM/WUST_RM_blog", // 关于链接
 	},
 };
 

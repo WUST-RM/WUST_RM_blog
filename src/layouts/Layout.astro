@@ -219,6 +219,17 @@ if (siteConfig.font) {
 			)
 		}
 
+		<!-- 移动端在 CSS 层面直接隐藏看板娘，避免占位图/模型加载 -->
+		{
+			pioConfig.enable && pioConfig.hiddenOnMobile && (
+				<Fragment
+					set:html={`<style>@media (max-width: ${
+						pioConfig.live2d?.mobileBreakpoint ?? 1024
+					}px) {.pio-container { display: none !important; }}</style>`}
+				/>
+			)
+		}
+
 		<link
 			rel="alternate"
 			type="application/rss+xml"
