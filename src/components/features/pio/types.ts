@@ -1,9 +1,9 @@
 export interface Live2DOptions {
 	/** 模型相对 canvas 的缩放倍数（不填则自动适配） */
 	scale?: number;
-	/** 水平偏移（相对 canvas 宽度的比例，-1 ~ 1） */
+	/** 水平偏移（CSS 像素，正值向右） */
 	offsetX?: number;
-	/** 垂直偏移（相对 canvas 高度的比例，-1 ~ 1） */
+	/** 垂直偏移（CSS 像素，正值向下） */
 	offsetY?: number;
 	/** 待机动作组名称，默认 "Idle" */
 	idleGroupName?: string;
@@ -15,6 +15,18 @@ export interface Live2DOptions {
 	preview?: string;
 	/** 小于该视口宽度时隐藏看板娘 */
 	mobileBreakpoint?: number;
+	/** 是否显示「全身 / 半身」显示比例切换按钮（默认显示） */
+	toggleView?: boolean;
+	/** 默认显示模式："full" 全身 | "bust" 半身特写 */
+	defaultView?: "full" | "bust";
+	/** 半身特写模式的画布尺寸与模型布局 */
+	bustView?: {
+		width?: number;
+		height?: number;
+		scale?: number;
+		offsetX?: number;
+		offsetY?: number;
+	};
 }
 
 export interface PioConfig {

@@ -473,13 +473,23 @@ export interface PioConfig {
 	hiddenOnMobile?: boolean; // 是否在移动设备上隐藏
 	live2d?: {
 		scale?: number; // 模型缩放倍数（不填则自动适配）
-		offsetX?: number; // 水平偏移（相对 canvas 宽度，-1 ~ 1）
-		offsetY?: number; // 垂直偏移（相对 canvas 高度，-1 ~ 1）
+		offsetX?: number; // 水平偏移（CSS 像素，正值向右）
+		offsetY?: number; // 垂直偏移（CSS 像素，正值向下）
 		idleGroupName?: string; // 待机动作组名称，默认 "Idle"
 		idleIntervalMs?: number; // 待机动作循环间隔（毫秒）
 		expressions?: boolean; // 点击模型时是否播放随机表情
 		preview?: string; // 加载占位图路径
 		mobileBreakpoint?: number; // 小于该视口宽度时隐藏看板娘
+		toggleView?: boolean; // 是否显示「全身 / 半身」显示比例切换按钮
+		defaultView?: "full" | "bust"; // 默认显示模式："full" 全身 | "bust" 半身特写
+		bustView?: {
+			// 半身特写模式的画布尺寸与模型布局（CSS 像素 / 缩放倍数）
+			width?: number;
+			height?: number;
+			scale?: number;
+			offsetX?: number;
+			offsetY?: number;
+		};
 	};
 	dialog?: {
 		welcome?: string | string[]; // 欢迎词

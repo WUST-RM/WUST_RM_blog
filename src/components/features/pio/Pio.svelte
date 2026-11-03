@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from "svelte";
+	import { onDestroy, onMount, tick } from "svelte";
 
 	import { pioConfig } from "@/config";
 
@@ -7,9 +7,33 @@
 
 	export let config: Partial<PioProps["config"]> = {};
 
+	const live2dConfig = pioConfig.live2d ?? {};
 	const width = config?.width ?? pioConfig.width ?? 300;
 	const height = config?.height ?? pioConfig.height ?? 420;
-	const mobileBreakpoint = pioConfig.live2d?.mobileBreakpoint ?? 1024;
+	const mobileBreakpoint = live2dConfig.mobileBreakpoint ?? 1024;
+	// 运行时脚本版本号：用于给 l2d.js 加缓存戳，升级运行时后无需用户手动清缓存
+	const RUNTIME_VERSION = "2";
+
+	/**
+	 * 显示比例模式：
+	 * - "full" 全身（默认，画布 300x420）
+	 * - "bust" 半身特写（画布 300x300，只显示头部到胸部）
+	 * 由按钮栏中的「全身 / 半身」按钮切换，并记录到 localStorage。
+	 */
+	type ViewMode = "full" | "bust";
+	const VIEW_STORAGE_KEY = "pio-view-mode";
+	const viewToggleEnabled = live2dConfig.toggleView !== false;
+	const bustConfig = live2dConfig.bustView ?? {};
+	const bustWidth = bustConfig.width ?? 300;
+	const bustHeight = bustConfig.height ?? 300;
+	const bustScale = bustConfig.scale ?? 3;
+	const bustOffsetX = bustConfig.offsetX ?? 0;
+	const bustOffsetY = bustConfig.offsetY ?? 507;
+
+	let viewMode: ViewMode = live2dConfig.defaultView === "bust" ? "bust" : "full";
+
+	$: viewWidth = viewMode === "bust" ? bustWidth : width;
+	$: viewHeight = viewMode === "bust" ? bustHeight : height;
 
 	const pioOptions = {
 		mode: config?.mode ?? pioConfig.mode,
@@ -23,11 +47,23 @@
 
 	// 加载占位图：优先使用 live2d.preview，否则取第一个模型同目录的 preview.png
 	const previewUrl =
-		pioConfig.live2d?.preview ??
+		live2dConfig.preview ??
 		(modelPaths[0] ? modelPaths[0].replace(/[^/]+$/, "preview.png") : "");
 
 	let modelState: "idle" | "loading" | "ready" | "error" = "idle";
 	let errorMessage = "";
+
+	/** 当前模式对应的模型布局参数（缩放倍数 / CSS 像素偏移）。 */
+	function layoutOptions(mode: ViewMode) {
+		if (mode === "bust") {
+			return { scale: bustScale, offsetX: bustOffsetX, offsetY: bustOffsetY };
+		}
+		return {
+			scale: live2dConfig.scale ?? 1,
+			offsetX: live2dConfig.offsetX ?? 0,
+			offsetY: live2dConfig.offsetY ?? 0,
+		};
+	}
 
 	/**
 	 * 在加载 l2d.js 之前注入运行时参数（缩放、偏移、待机间隔等）。
@@ -35,10 +71,40 @@
 	 */
 	function setLive2DOptions() {
 		(window as any).__LIVE2D_OPTIONS = {
-			...pioConfig.live2d,
-			width,
-			height,
+			...live2dConfig,
+			...layoutOptions(viewMode),
+			width: viewWidth,
+			height: viewHeight,
 		};
+	}
+
+	/** 模型已加载时即时切换布局，不重新下载 / 解析模型（不会闪白、不耗流量）。 */
+	function applyViewToRuntime(): boolean {
+		const w = window as any;
+		if (!w.loadlive2d || typeof w.loadlive2d.setView !== "function") {
+			return false;
+		}
+		return w.loadlive2d.setView("pio", {
+			width: viewWidth,
+			height: viewHeight,
+			...layoutOptions(viewMode),
+		});
+	}
+
+	async function toggleView() {
+		if (!viewToggleEnabled) {
+			return;
+		}
+		viewMode = viewMode === "full" ? "bust" : "full";
+		try {
+			localStorage.setItem(VIEW_STORAGE_KEY, viewMode);
+		} catch {
+			/* 隐私模式 / 存储被禁用时忽略 */
+		}
+		setLive2DOptions();
+		// 等 canvas 与容器尺寸更新后再重排，避免 setView 读到旧尺寸
+		await tick();
+		applyViewToRuntime();
 	}
 
 	function initPio() {
@@ -103,7 +169,12 @@
 
 		const loadWithIdle = () => {
 			loadScript("/pio/static/live2dcubismcore.min.js", "pio-cubism-core")
-				.then(() => loadScript("/pio/static/l2d.js", "pio-l2d-script"))
+				.then(() =>
+					loadScript(
+						`/pio/static/l2d.js?v=${RUNTIME_VERSION}`,
+						"pio-l2d-script",
+					),
+				)
 				.then(() => loadScript("/pio/static/pio.js", "pio-main-script"))
 				.then(() => {
 					modelState = "loading";
@@ -129,6 +200,9 @@
 		const detail = (event as CustomEvent)?.detail;
 		if (!detail || detail.canvasId === "pio") {
 			modelState = "ready";
+			// 例如「关闭看板娘 → 点击头像重新显示」时，pio.js 会重新调用 loadlive2d，
+			// 这里再把布局校正为当前显示比例（半身 / 全身）。
+			applyViewToRuntime();
 		}
 	}
 
@@ -144,6 +218,16 @@
 	onMount(() => {
 		if (!pioConfig.enable) {
 			return;
+		}
+
+		// 恢复上次选择的显示比例
+		try {
+			const stored = localStorage.getItem(VIEW_STORAGE_KEY);
+			if (stored === "full" || stored === "bust") {
+				viewMode = stored;
+			}
+		} catch {
+			/* ignore */
 		}
 
 		// 小屏 / 省流量模式下不加载模型（模型约 16MB，避免浪费流量）
@@ -162,6 +246,7 @@
 		) as HTMLCanvasElement | null;
 		if (existingCanvas?.dataset.live2dReady === "1") {
 			modelState = "ready";
+			tick().then(applyViewToRuntime);
 		}
 
 		window.addEventListener("live2d:loaded", handleModelLoaded);
@@ -183,9 +268,31 @@
 		id="pio-container"
 		class={`pio-container ${pioConfig.position || "left"}`}
 		class:model-error={modelState === "error"}
-		style={`width: ${width}px; height: ${height}px;`}
+		class:view-bust={viewMode === "bust"}
+		style={`width: ${viewWidth}px; height: ${viewHeight}px;`}
 	>
-		<div class="pio-action"></div>
+		<div class="pio-action">
+			{#if viewToggleEnabled}
+				<span
+					class="pio-view"
+					role="button"
+					tabindex="0"
+					aria-label={viewMode === "full"
+						? "切换为半身显示"
+						: "切换为全身显示"}
+					title={viewMode === "full"
+						? "切换为半身显示"
+						: "切换为全身显示"}
+					on:click={toggleView}
+					on:keydown={(event) => {
+						if (event.key === "Enter" || event.key === " ") {
+							event.preventDefault();
+							toggleView();
+						}
+					}}
+				></span>
+			{/if}
+		</div>
 
 		<!-- 模型加载占位图：透明 canvas 背后先显示角色缩略图，模型就绪后淡出 -->
 		<div
@@ -216,7 +323,7 @@
 			id="pio"
 			width={width}
 			height={height}
-			style={`width: ${width}px; height: ${height}px;`}
+			style={`width: ${viewWidth}px; height: ${viewHeight}px;`}
 		></canvas>
 	</div>
 {/if}

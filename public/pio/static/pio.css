@@ -239,6 +239,17 @@
 	display: none;
 }
 
+/* 显示比例切换按钮（全身 / 半身）
+   复用 .pio-action span 的圆形按钮样式，仅替换图标：
+   - 全身模式：放大图标（点击切换为半身特写）
+   - 半身模式：缩小图标（点击切回全身） */
+.pio-action .pio-view {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBvbHlsaW5lIHBvaW50cz0iMTUgMyAyMSAzIDIxIDkiLz48cG9seWxpbmUgcG9pbnRzPSI5IDIxIDMgMjEgMyAxNSIvPjxsaW5lIHgxPSIyMSIgeTE9IjMiIHgyPSIxNCIgeTI9IjEwIi8+PGxpbmUgeDE9IjMiIHkxPSIyMSIgeDI9IjEwIiB5Mj0iMTQiLz48L3N2Zz4=");
+}
+.pio-container.view-bust .pio-action .pio-view {
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBvbHlsaW5lIHBvaW50cz0iNCAxNCAxMCAxNCAxMCAyMCIvPjxwb2x5bGluZSBwb2ludHM9IjIwIDEwIDE0IDEwIDE0IDQiLz48bGluZSB4MT0iMTQiIHkxPSIxMCIgeDI9IjIxIiB5Mj0iMyIvPjxsaW5lIHgxPSIzIiB5MT0iMjEiIHgyPSIxMCIgeTI9IjE0Ii8+PC9zdmc+");
+}
+
 @media screen and (max-width: 768px) {
 	#pio {
 		width: 8em;

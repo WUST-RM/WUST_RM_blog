@@ -590,7 +590,7 @@ export const pioConfig: import("./types/config").PioConfig = {
 	width: 300, // 画布宽度（px）
 	height: 420, // 画布高度（px）
 	mode: "draggable", // 默认为可拖拽模式
-	hiddenOnMobile: false, // 默认在移动设备上隐藏（模型约 16MB，避免浪费流量）
+	hiddenOnMobile: false, // 默认移动端也显示；设为 true 则移动端不加载模型（省流量）
 	live2d: {
 		// 模型缩放 / 偏移由 l2d.js 读取；数值基于 300x420 画布实测
 		scale: 1.12, // 全身完整显示（推荐）；改为 2.0 + offsetY 339 可切换为膝盖以上特写
@@ -601,6 +601,17 @@ export const pioConfig: import("./types/config").PioConfig = {
 		expressions: true, // 点击时随机切换一次表情
 		mobileBreakpoint: 1024, // 视口宽度 ≤1024px 时隐藏
 		preview: "/live2d/models/taifish/preview.webp", // 加载占位图
+		// 显示比例切换：按钮栏中的「全身 / 半身」按钮
+		toggleView: true, // 是否显示切换按钮
+		defaultView: "full", // 默认模式："full" 全身 | "bust" 半身特写
+		bustView: {
+			// 半身特写模式（300x300 方形画布，数值基于该画布实测）
+			width: 300,
+			height: 300,
+			scale: 3.0,
+			offsetX: 0,
+			offsetY: 507,
+		},
 	},
 	dialog: {
 		welcome: [

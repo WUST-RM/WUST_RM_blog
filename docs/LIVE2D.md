@@ -6,13 +6,15 @@
 
 ## 效果
 
-- 桌面端（视口宽度 > 1024px）左下角显示 Live2D 角色，可拖拽移动。
+- 页面左下角显示 Live2D 角色，可拖拽移动（默认桌面 / 移动端都显示，见下方隐藏开关）。
 - 角色会循环播放 IDLE 待机动作；点击角色会播放随机身体动作（举手 / 摆尾 / 竖手指等）并随机切换表情。
-- 鼠标悬停显示 Pio 的操作按钮：回到首页、关于（跳转仓库）、关闭看板娘。
+- 鼠标悬停显示 Pio 的操作按钮：切换显示比例（全身 / 半身）、回到首页、关于（跳转仓库）、关闭看板娘。
 - 首次加载时先显示角色缩略图占位，模型就绪后淡出。
-- 移动端 / 小屏 / 省流量模式（`navigator.connection.saveData`）下不加载模型，避免浪费流量：
-  `Layout.astro` 会在 `<head>` 里注入一段 `@media (max-width: <mobileBreakpoint>px)` 样式直接隐藏看板娘
-  （SSR 阶段即生效，不依赖 JS），`Pio.svelte` 在 `onMount` 时再跳过脚本加载。
+- 移动端隐藏开关：`pioConfig.hiddenOnMobile` 当前为 `false`（移动端也显示）。若设为 `true`，
+  `Layout.astro` 会在 `<head>` 注入 `@media (max-width: <mobileBreakpoint>px)` 样式直接隐藏看板娘（SSR 即生效），
+  `Pio.svelte` 也会跳过脚本加载、不下载约 19 MB 模型。开启省流量模式（`navigator.connection.saveData`）时同样不加载。
+- 移动端（≤768px）沿用 Pio 原插件的样式：看板娘仅作装饰展示（`.pio-container { pointer-events: none }`），
+  不响应点击 / 拖拽，避免遮挡页面触控操作；如需移动端可交互，可在 `pio.css` 中覆盖该规则。
 - 模型加载失败时，占位层会显示错误面板（含具体错误信息），并隐藏 canvas，避免 WebGL 上下文异常时出现空白色块。
 
 ## 目录与文件
@@ -34,7 +36,7 @@ public/
 │       └── expressions/                 # 23 个表情
 ├── pio/static/
 │   ├── live2dcubismcore.min.js          # 官方 Cubism Core 5.x（必须先于 l2d.js 加载）
-│   ├── l2d.js                           # Cubism 3/4 渲染运行时（pixi 打包产物，提供全局 loadlive2d）
+│   ├── l2d.js                           # Cubism 3/4 渲染运行时 v1.1.0（pixi 打包产物，提供全局 loadlive2d / setView）
 │   ├── pio.js                           # Pio 插件逻辑（对话 / 按钮 / 拖拽）
 │   ├── pio.css                          # Pio 样式 + 看板娘集成样式
 │   └── avatar.jpg                       # 关闭看板娘后右下角的小头像
@@ -75,6 +77,8 @@ Pio.svelte (Astro island, client:visible)
 - 重复调用 `loadlive2d`（例如 Pio 的「换装」按钮、关闭后再打开）是安全的：同一个 canvas 会复用已创建的 WebGL 渲染器
 （缓存在 `WeakMap` 里），只销毁旧模型、重新加载新模型，避免因重复创建上下文而报
 `Invalid value of 0 passed to checkMaxIfStatementsInShader`；也不会叠加 canvas 或 ticker。
+- 显示比例切换（按钮栏最上方的「放大 / 缩小」图标）调用 `loadlive2d.setView("pio", { width, height, scale, offsetX, offsetY })`：
+  只重设 canvas 尺寸与布局参数并重绘，**不重新下载/解析模型**，切换是瞬时的，不会闪白或重新 Loading。
 
 ## 配置（`src/config.ts`）
 
@@ -86,7 +90,7 @@ export const pioConfig: PioConfig = {
 	width: 300,                // 画布 CSS 宽度（px）
 	height: 420,               // 画布 CSS 高度（px）
 	mode: "draggable",         // "static" | "fixed" | "draggable"
-	hiddenOnMobile: true,
+	hiddenOnMobile: false,     // 移动端也显示；设为 true 则移动端隐藏且不下载模型
 	live2d: {
 		scale: 1.12,           // 缩放倍数（1 = 自动“完整适配”）
 		offsetX: 0,            // 水平偏移（canvas 像素，正值向右）
@@ -94,8 +98,16 @@ export const pioConfig: PioConfig = {
 		idleGroupName: "Idle", // 待机动作组
 		idleIntervalMs: 6000,  // 待机动作兜底间隔（ms）
 		expressions: true,     // 点击时随机切换表情
-		mobileBreakpoint: 1024,// 视口宽度 ≤ 该值时隐藏（同时不下载模型）
+		mobileBreakpoint: 1024,// hiddenOnMobile 为 true 时，视口 ≤ 该值即隐藏（不下载模型）
 		preview: "/live2d/models/taifish/preview.webp", // 加载占位图（可选）
+		toggleView: true,      // 是否显示「全身 / 半身」切换按钮
+		defaultView: "full",   // 默认比例："full" 全身 | "bust" 半身特写
+		bustView: {            // 半身模式的画布与布局（300×300 实测值）
+			width: 300,
+			height: 300,
+			scale: 3.0,
+			offsetY: 507,
+		},
 	},
 	dialog: { ... },           // Pio 的欢迎词 / 触摸台词 / 按钮提示
 };
@@ -106,7 +118,7 @@ export const pioConfig: PioConfig = {
 - **模型太小/太大**：优先改 `width` / `height`（画布越大角色越大），或设置 `live2d.scale`（如 `1.15`）微调。
 - **角色被裁切**：用 `live2d.offsetY` 上下平移（正值向下），`offsetX` 左右平移。
 - **想静音点击反应**：把 `live2d.expressions` 设为 `false`（仍会播放身体动作）。
-- **移动端也想显示**：`hiddenOnMobile: false`，但请注意模型首次加载约 19 MB。
+- **移动端想省流量**：把 `hiddenOnMobile` 设为 `true`，此时 ≤ `mobileBreakpoint` 宽度不下载约 19 MB 模型。
 - 修改 `width` / `height` 后，`Pio.svelte` 中的 canvas 内联尺寸会同步更新，无需改 CSS。
 
 ### 画面调整（300×420 画布实测）
@@ -125,6 +137,23 @@ export const pioConfig: PioConfig = {
 - 不要再缩小到 `scale: 1.8, offsetY: 265` 一类的中间值：尾巴会贴近右边缘，播放动作时有被裁切的风险。
 - 其他可选参数（完整表格见运行时目录的 `README.md`）：`fill`（自动适配留白）、`anchor`（`bottom`/`top`/`center`）、
   `idleIntervalMs`、`expressionResetMs`、`clickReactions`、`logLevel`。
+
+### 显示比例切换（全身 / 半身）
+
+鼠标悬停在角色上时，按钮栏最上方会出现一个「放大 / 缩小」图标按钮，用于在两种显示比例之间切换：
+
+| 模式 | 画布（CSS） | 布局参数 | 说明 |
+| --- | --- | --- | --- |
+| **全身（默认）** | 300×420 | `scale: 1.12, offsetY: 17` | 完整角色 + 尾巴，与页面其他内容同高 |
+| 半身特写 | 300×300 | `scale: 3.0, offsetY: 507` | 头部到胸部，脸部/表情更大，占位是正方形 |
+
+- 切换结果写入 `localStorage` 的 `pio-view-mode`（`"full"` / `"bust"`），刷新页面或站内跳转后保持上次选择。
+- 切换只调用 `loadlive2d.setView` 重设 canvas 尺寸与布局，不重新下载模型，瞬时完成、无闪烁。
+- 不想显示切换按钮：`live2d.toggleView: false`；希望默认就是半身：`live2d.defaultView: "bust"`。
+- `bustView` 可自定义 `width` / `height` / `scale` / `offsetX` / `offsetY`。调参思路与全身模式相同：
+  画布改成正方形后，`scale` 越大脸部越大，再用 `offsetY` 让头顶贴近画布顶部（正值向下）。
+  例如想要“只露头”的头像模式，可把 `height` 降到 200、`scale` 再调大，并用 `offsetY` 对齐头顶。
+- 半身模式下按钮栏、对话框、拖拽等行为与全身模式完全一致；面板高度变化后会自动贴回左下角。
 
 ## 版权与署名（重要）
 
@@ -163,7 +192,7 @@ Cubism 2 的 `model.json` / `.moc` 模型**不能**用这套运行时加载。
 
 - 首次加载体积：`moc3` ≈ 16.5 MB（Vercel/CDN 会 gzip/br 压缩，实际传输明显更小）+ 贴图 1.54 MB + 动作/表情/物理约 0.4 MB；
   之后由浏览器 HTTP 缓存，二次访问几乎无网络开销。
-- 贴图在 GPU 中解码为约 64 MB 显存（2048 上限的 RGBA），移动端已默认隐藏。
+- 贴图在 GPU 中解码为约 64 MB 显存（2048 上限的 RGBA）；移动端默认也会加载，若在意流量可设 `hiddenOnMobile: true`。
 - 加载时机：`<Pio client:visible />`（进入视口才水合）+ `requestIdleCallback` + 视口宽度/省流量判断，
   不会阻塞首页渲染；脚本按 core → l2d → pio 顺序串行加载。
 - Cubism Core 为官方 5.x 版本，支持 moc3 v5（本模型文件版本 5）。
@@ -204,7 +233,9 @@ node live2d-work/bundle/verify/verify-live2d.mjs --url http://127.0.0.1:4321/ --
 | `Failed to load model` / moc3 解析失败 | 确认 `taifish.moc3` 完整（16,498,560 B，sha256 `b708e795…b1052e6`），且未被 git 换行/过滤破坏 |
 | 角色显示为空白或只有一半 | 调整 `width`/`height` 或 `live2d.scale` / `offsetY`；模型原始画布为 3749×7697（竖长比例） |
 | 鼻子上出现黑色小方块 | 作者原模型 `texture_00` 图集带一条会被鼻子采样的黑色长条，本仓库转换时已置透明（详见「资源转换流程」第 3 步）；若换回作者原贴图会复现 |
-| 移动端看不到 | 属预期行为（`hiddenOnMobile` + `mobileBreakpoint`），需要时关闭 |
+| 移动端看不到 / 移动端想隐藏 | `pioConfig.hiddenOnMobile` 当前为 `false`，移动端会显示；设为 `true` 则 ≤ `mobileBreakpoint` 宽度隐藏且不下载模型 |
 | 关闭后想恢复看板娘 | 点击左下角半透明小头像（`.pio-show`），或清除 localStorage 中的 `posterGirl` 后刷新 |
 | 恢复后显示「看板娘加载失败」 | 打开控制台看 `[l2d] load failed:` 的具体错误；若为 `checkMaxIfStatementsInShader`，说明 `l2d.js` 版本过旧（没有按 canvas 复用渲染器），请更新 `l2d.js`。本仓库当前版本已修复 |
 | 点击没有反应 | 确认 `pioConfig.mode` 不是 `"static"`；`static` 模式只显示模型、无交互 |
+| 想切换成半身特写 | 鼠标悬停角色，点按钮栏最上方的「放大 / 缩小」图标；参数与自定义见「显示比例切换（全身 / 半身）」 |
+| 切换按钮不出现 | 确认 `live2d.toggleView` 不为 `false`；按钮只在鼠标悬停看板娘时显示（移动端悬停请先轻点角色） |
